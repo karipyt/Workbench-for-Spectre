@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SPECTRE — Turbo-ramjet Engine Project</title>
+  <meta name="description" content="SPECTRE (Aerosoc Turbo-ramjet Engine Project) — team portal for workstreams, tasks, files and schedule." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1530'/%3E%3Cpath d='M5 16 L12 10 H24 L28 13 V19 L24 22 H12 Z' fill='none' stroke='%23ff6a3d' stroke-width='2'/%3E%3Cpath d='M5 16 H28' stroke='%23fff' stroke-width='1.5'/%3E%3C/svg%3E" />
+
+  <!-- Google Fonts: Space Grotesk (headings) + Inter (UI/body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ================================================================
+       STICKY TOP NAVIGATION
+       ================================================================ -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="#overview" class="brand" aria-label="SPECTRE home">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect width="32" height="32" rx="7" fill="#0b1530"/>
+          <path d="M4 16 L11 10 H23 L28 13 V19 L23 22 H11 Z" fill="none" stroke="#ff6a3d" stroke-width="2"/>
+          <path d="M4 16 H28" stroke="#fff" stroke-width="1.4"/>
+        </svg>
+        <span class="brand-text"><strong>SPECTRE</strong><small>Aerosoc Turbo-ramjet</small></span>
+      </a>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav" id="nav" aria-label="Main">
+        <a href="#overview" class="nav-link" data-view="overview">Overview</a>
+        <div class="nav-dropdown">
+          <a href="#teams" class="nav-link" data-view="teams">
+            Teams
+            <svg class="caret" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </a>
+          <div class="dropdown-menu" id="teams-menu"><!-- filled by app.js --></div>
+        </div>
+        <a href="#tasks" class="nav-link" data-view="tasks">Task Board</a>
+        <a href="#calendar" class="nav-link" data-view="calendar">Calendar</a>
+      </nav>
+
+      <div class="topbar-right">
+        <span id="mode-badge" class="mode-badge">Connecting…</span>
+        <button class="me-btn" id="me-btn" data-action="me-edit" title="Set your name">
+          <span class="avatar avatar-sm" id="me-avatar">?</span>
+          <span id="me-name">Set name</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="app">
+
+    <!-- ================================================================
+         VIEW 1 — OVERVIEW (central project brief)
+         ================================================================ -->
+    <section class="view" id="view-overview" data-view="overview">
+      <div class="hero">
+        <!-- Decorative turbo-ramjet schematic -->
+        <svg class="hero-schematic" viewBox="0 0 1200 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <defs>
+            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M40 0H0V40" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+            </pattern>
+            <linearGradient id="flow" x1="0" x2="1">
+              <stop offset="0" stop-color="#5b8cff" stop-opacity=".0"/>
+              <stop offset=".5" stop-color="#5b8cff" stop-opacity=".55"/>
+              <stop offset="1" stop-color="#ff6a3d" stop-opacity=".8"/>
+            </linearGradient>
+          </defs>
+          <rect width="1200" height="420" fill="url(#grid)"/>
+          <g fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.6">
+            <!-- outer casing -->
+            <path d="M470 150 L560 120 H900 L1010 140 L1120 170"/>
+            <path d="M470 270 L560 300 H900 L1010 280 L1120 250"/>
+            <!-- inlet spike -->
+            <path d="M380 210 L520 180 L560 190 L560 230 L520 240 Z"/>
+            <!-- core / bypass splitter -->
+            <path d="M590 165 H860 M590 255 H860" stroke-dasharray="6 6" stroke="rgba(255,255,255,.35)"/>
+            <!-- compressor blades -->
+            <path d="M610 170v80 M628 168v84 M646 166v88"/>
+            <!-- combustor -->
+            <rect x="680" y="180" width="90" height="60" rx="8"/>
+            <!-- turbine -->
+            <path d="M790 170v80 M808 172v76"/>
+            <!-- nozzle -->
+            <path d="M900 160 L1000 190 M900 260 L1000 230"/>
+          </g>
+          <!-- flow streamlines -->
+          <g fill="none" stroke="url(#flow)" stroke-width="2">
+            <path d="M60 140 C 300 140, 420 150, 560 140 S 900 135, 1180 165"/>
+            <path d="M60 210 C 300 210, 420 210, 560 210 S 900 210, 1180 210"/>
+            <path d="M60 280 C 300 280, 420 270, 560 280 S 900 285, 1180 255"/>
+          </g>
+          <!-- station numbers -->
+          <g fill="rgba(255,255,255,.6)" font-family="Space Grotesk, sans-serif" font-size="14">
+            <text x="380" y="330">0</text><text x="470" y="330">1</text><text x="560" y="330">2</text>
+            <text x="660" y="330">3</text><text x="770" y="330">4</text><text x="900" y="330">5</text>
+            <text x="1010" y="330">8</text><text x="1110" y="330">9</text>
+          </g>
+          <g stroke="rgba(255,255,255,.2)">
+            <path d="M384 315v-200 M474 315v-180 M564 315v-200 M664 315v-160 M774 315v-160 M904 315v-200 M1014 315v-180 M1114 315v-160" stroke-dasharray="2 5"/>
+          </g>
+        </svg>
+
+        <div class="container hero-content">
+          <p class="eyebrow eyebrow-light">Aerosoc · Design / Validation Project</p>
+          <h1 class="hero-title">SPECTRE <span>— Turbo-ramjet Engine Project</span></h1>
+          <div class="badges">
+            <span class="badge"><b>Team Leads</b> Jack Bohills &amp; Richa Kamath</span>
+            <span class="badge"><b>Cohort</b> 2026/2027</span>
+            <span class="badge"><b>Team</b> ~20 Members</span>
+          </div>
+          <div class="hero-actions">
+            <a href="#tasks" class="btn btn-accent">Open Task Board</a>
+            <a href="#calendar" class="btn btn-ghost-light">View Calendar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="grid-2 brief-row">
+          <article class="card brief">
+            <p class="eyebrow">Central project brief</p>
+            <h2 class="card-title">Project Brief</h2>
+            <p class="lead">A <strong>Design/Validation Project</strong> on an existing design, aiming to improve the engine using
+              <strong>Ansys simulation tools</strong> and add <strong>electronic assistance</strong>.</p>
+            <p>Physical modelling is limited to a <strong>3D printed model</strong>, prioritising a coherent concept and credible
+              evidence over full-engine fidelity.</p>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <h2 class="card-title">Programme Milestones</h2>
+              <a href="#calendar" class="link-sm">Calendar →</a>
+            </div>
+            <ol class="timeline" id="milestone-timeline"><!-- filled by app.js --></ol>
+          </article>
+        </div>
+
+        <section class="section">
+          <div class="section-head">
+            <div>
+              <h2>Image Showcase</h2>
+              <p class="muted">CAD renders, CFD contours and test-rig photos. Click an empty slot to upload.</p>
+            </div>
+            <button class="btn btn-outline btn-sm" data-action="add-image" data-team="overview">+ Add Image</button>
+          </div>
+          <div class="gallery gallery-showcase" id="overview-gallery"><!-- filled by app.js --></div>
+        </section>
+
+        <div class="grid-2">
+          <article class="card card-outcomes">
+            <h2 class="card-title"><span class="title-icon ok">✓</span> Minimum Outcomes</h2>
+            <ul class="check-list">
+              <li>Requirements-led propulsion concept with an agreed operating envelope.</li>
+              <li>Controlled parametric CAD assembly plus analysis-ready geometry releases.</li>
+              <li>Internally consistent cycle/system model providing shared boundary conditions.</li>
+              <li>Verified and validated CFD, thermal/structural, and transient-dynamics work packages.</li>
+              <li>Controls/electronics concept and cold actuated printed demonstrator.</li>
+            </ul>
+          </article>
+
+          <article class="card card-exclusions">
+            <h2 class="card-title"><span class="title-icon no">✕</span> Explicit Exclusions</h2>
+            <ul class="x-list">
+              <li>Complete core design</li>
+              <li>Manufacture/operation of a hot engine</li>
+              <li>Certification</li>
+              <li>Proprietary engine-map recreation</li>
+              <li>Full 3D CFD across the envelope</li>
+              <li>Detailed combustion chemistry</li>
+              <li>Advanced blade cooling/life</li>
+              <li>Two-way FSI</li>
+            </ul>
+          </article>
+        </div>
+
+        <section class="section">
+          <div class="section-head">
+            <div>
+              <h2>Engineering Workstreams</h2>
+              <p class="muted">Four workstreams, each with scope notes, a render gallery and a live file repository.</p>
+            </div>
+          </div>
+          <div class="ws-grid" id="ws-grid"><!-- filled by app.js --></div>
+        </section>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         VIEW 2 — TEAMS (4 workstreams)
+         ================================================================ -->
+    <section class="view" id="view-teams" data-view="teams" hidden>
+      <div class="container">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">Workstreams</p>
+            <h1>Engineering Teams</h1>
+          </div>
+        </div>
+
+        <div class="subtabs" id="team-tabs" role="tablist"><!-- filled by app.js --></div>
+
+        <div class="card team-header" id="team-header"></div>
+
+        <div class="team-grid">
+          <article class="card" id="team-notes"></article>
+          <article class="card" id="team-stats"></article>
+        </div>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Image &amp; Render Gallery</h2>
+              <p class="muted small">CAD renders, contour plots, rig photos. Click an image to enlarge.</p>
+            </div>
+            <button class="btn btn-outline btn-sm" data-action="add-image" data-team="current">+ Add Image</button>
+          </div>
+          <div class="gallery" id="team-gallery"></div>
+        </article>
+
+        <article class="card repo">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">File &amp; Link Repository</h2>
+              <p class="muted small">Any format: PDF, STEP, CAS, XLSX, MP4, ZIP… or paste a YouTube / Drive / OneDrive link.</p>
+            </div>
+            <div class="head-actions">
+              <input type="search" id="repo-search" class="input input-sm" placeholder="Search files…" />
+              <button class="btn btn-outline btn-sm" data-action="add-link">+ Add Link</button>
+              <button class="btn btn-primary btn-sm" data-action="upload-file">+ Upload File</button>
+            </div>
+          </div>
+
+          <div class="dropzone" id="repo-drop">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0l-4 4m4-4l4 4M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"/></svg>
+            <span>Drag &amp; drop a file here, or <button class="linklike" data-action="upload-file">browse</button></span>
+          </div>
+
+          <div class="chips" id="repo-filters"><!-- filled by app.js --></div>
+          <ul class="repo-list" id="repo-list"></ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         VIEW 3 — TASK BOARD (Kanban)
+         ================================================================ -->
+    <section class="view" id="view-tasks" data-view="tasks" hidden>
+      <div class="container container-wide">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">Delivery</p>
+            <h1>Task Assignment Board</h1>
+          </div>
+          <button class="btn btn-primary" data-action="task-new">+ Assign Task</button>
+        </div>
+
+        <div class="toolbar card">
+          <input type="search" id="f-q" class="input" placeholder="Search tasks…" />
+          <select id="f-team" class="input"><option value="">All workstreams</option></select>
+          <select id="f-member" class="input"><option value="">All members</option></select>
+          <select id="f-priority" class="input">
+            <option value="">Any priority</option>
+            <option>High</option><option>Medium</option><option>Low</option>
+          </select>
+          <button class="btn btn-ghost btn-sm" data-action="filters-clear">Clear</button>
+        </div>
+
+        <div class="board" id="board"><!-- columns filled by app.js --></div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         VIEW 4 — CALENDAR
+         ================================================================ -->
+    <section class="view" id="view-calendar" data-view="calendar" hidden>
+      <div class="container container-wide">
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">Schedule</p>
+            <h1>Project Calendar</h1>
+          </div>
+          <button class="btn btn-primary" data-action="event-new">+ Add Event / Deadline</button>
+        </div>
+
+        <div class="cal-layout">
+          <article class="card cal-card">
+            <div class="cal-toolbar">
+              <div class="cal-nav">
+                <button class="icon-btn" data-action="cal-prev" aria-label="Previous month">‹</button>
+                <h2 id="cal-title"></h2>
+                <button class="icon-btn" data-action="cal-next" aria-label="Next month">›</button>
+              </div>
+              <button class="btn btn-outline btn-sm" data-action="cal-today">Today</button>
+            </div>
+            <div class="cal-legend" id="cal-legend"></div>
+            <div class="cal-weekdays">
+              <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+            </div>
+            <div class="cal-grid" id="cal-grid"></div>
+          </article>
+
+          <aside class="card agenda">
+            <h2 class="card-title">Upcoming Agenda</h2>
+            <ul class="agenda-list" id="agenda-list"></ul>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>SPECTRE · Aerosoc Turbo-ramjet Engine Project · Cohort 2026/2027</span>
+      <span class="muted" id="footer-mode"></span>
+    </div>
+  </footer>
+
+  <!-- ================================================================
+       MODALS
+       ================================================================ -->
+
+  <!-- Task modal -->
+  <dialog class="modal" id="task-modal">
+    <form id="task-form" class="modal-body">
+      <div class="modal-head">
+        <h2 id="task-modal-title">Assign Task</h2>
+        <button type="button" class="icon-btn" data-close aria-label="Close">✕</button>
+      </div>
+      <input type="hidden" id="t-id" />
+      <label class="field"><span>Task title *</span><input id="t-title" class="input" required maxlength="140" /></label>
+      <div class="field-row">
+        <label class="field"><span>Assigned member *</span>
+          <input id="t-assignee" class="input" list="member-list" required maxlength="60" placeholder="e.g. Jack Bohills" />
+        </label>
+        <label class="field"><span>Workstream / Team</span><select id="t-team" class="input"></select></label>
+      </div>
+      <div class="field-row field-row-3">
+        <label class="field"><span>Priority</span>
+          <select id="t-priority" class="input"><option>High</option><option selected>Medium</option><option>Low</option></select>
+        </label>
+        <label class="field"><span>Due date</span><input id="t-due" type="date" class="input" /></label>
+        <label class="field"><span>Status</span><select id="t-status" class="input"></select></label>
+      </div>
+      <label class="field"><span>Notes (optional)</span><textarea id="t-desc" class="input" rows="3" maxlength="1000"></textarea></label>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-danger-ghost" id="t-delete" hidden>Delete</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Task</button>
+      </div>
+    </form>
+  </dialog>
+  <datalist id="member-list"></datalist>
+
+  <!-- Event modal -->
+  <dialog class="modal" id="event-modal">
+    <form id="event-form" class="modal-body">
+      <div class="modal-head">
+        <h2 id="event-modal-title">Add Event / Deadline</h2>
+        <button type="button" class="icon-btn" data-close aria-label="Close">✕</button>
+      </div>
+      <input type="hidden" id="e-id" />
+      <label class="field"><span>Title *</span><input id="e-title" class="input" required maxlength="140" /></label>
+      <div class="field-row field-row-3">
+        <label class="field"><span>Date *</span><input id="e-date" type="date" class="input" required /></label>
+        <label class="field"><span>Time</span><input id="e-time" type="time" class="input" /></label>
+        <label class="field"><span>Type</span><select id="e-type" class="input"></select></label>
+      </div>
+      <div class="field-row">
+        <label class="field"><span>Team</span><select id="e-team" class="input"></select></label>
+        <label class="field"><span>Owner</span><input id="e-owner" class="input" list="member-list" maxlength="60" /></label>
+      </div>
+      <label class="field"><span>Description</span><textarea id="e-desc" class="input" rows="3" maxlength="1500"></textarea></label>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-danger-ghost" id="e-delete" hidden>Delete</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Event</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- File / link modal -->
+  <dialog class="modal" id="file-modal">
+    <form id="file-form" class="modal-body">
+      <div class="modal-head">
+        <h2 id="file-modal-title">Add to Repository</h2>
+        <button type="button" class="icon-btn" data-close aria-label="Close">✕</button>
+      </div>
+      <div class="seg" id="file-seg">
+        <button type="button" data-mode="file" class="seg-btn">Upload file</button>
+        <button type="button" data-mode="link" class="seg-btn">Add link / video</button>
+      </div>
+
+      <div id="file-pane">
+        <label class="dropzone dropzone-modal" id="modal-drop">
+          <input type="file" id="f-file" hidden />
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0l-4 4m4-4l4 4M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"/></svg>
+          <span id="f-file-label">Click to choose a file, or drop it here</span>
+        </label>
+        <p class="muted small" id="f-limit"></p>
+      </div>
+      <div id="link-pane" hidden>
+        <label class="field"><span>URL *</span><input id="f-url" type="url" class="input" placeholder="https://youtube.com/watch?v=… or a Drive/OneDrive link" /></label>
+      </div>
+
+      <label class="field"><span>Title</span><input id="f-title" class="input" maxlength="140" placeholder="Defaults to the file name" /></label>
+      <label class="field"><span>Description</span><textarea id="f-desc" class="input" rows="2" maxlength="600"></textarea></label>
+      <label class="field"><span>Added by</span><input id="f-by" class="input" list="member-list" maxlength="60" /></label>
+
+      <div class="progress" id="f-progress" hidden><div class="progress-bar" id="f-progress-bar"></div></div>
+
+      <div class="modal-foot">
+        <span class="spacer"></span>
+        <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+        <button type="submit" class="btn btn-primary" id="f-submit">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- "Who are you?" modal -->
+  <dialog class="modal modal-sm" id="me-modal">
+    <form id="me-form" class="modal-body">
+      <div class="modal-head">
+        <h2>Your name</h2>
+        <button type="button" class="icon-btn" data-close aria-label="Close">✕</button>
+      </div>
+      <p class="muted small">Used to pre-fill "Added by" and to credit note edits. Stored only in this browser.</p>
+      <label class="field"><span>Name</span><input id="me-input" class="input" maxlength="60" list="member-list" /></label>
+      <div class="modal-foot"><span class="spacer"></span><button type="submit" class="btn btn-primary">Save</button></div>
+    </form>
+  </dialog>
+
+  <!-- Lightbox (images, video, YouTube) -->
+  <dialog class="lightbox" id="lightbox">
+    <button type="button" class="lightbox-close" data-close aria-label="Close">✕</button>
+    <div class="lightbox-content" id="lightbox-content"></div>
+    <p class="lightbox-caption" id="lightbox-caption"></p>
+  </dialog>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <!-- ================================================================
+       FIREBASE SDK (compat build via CDN). If these fail to load, or
+       no config is pasted in app.js, the app runs on localStorage.
+       ================================================================ -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
